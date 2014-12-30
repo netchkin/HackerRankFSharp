@@ -50,6 +50,13 @@
     <Compile Include="Program.fs" />
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IntroductionLib\IntroductionLib.fsproj">
+      <Name>IntroductionLib</Name>
+      <Project>{c4821a55-16ae-4348-92f2-00d5865c43a3}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
   </PropertyGroup>

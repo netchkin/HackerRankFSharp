@@ -3,37 +3,21 @@
 // See the 'F# Tutorial' project for more help.
 
 open System
-
-let FunSplit (separator:string) (text:string) =
-        text.Split([|separator|], StringSplitOptions.RemoveEmptyEntries) 
-
-let ParseToList (text:string) (separator:string) =
-    text
-    |> FunSplit separator
-    |> Array.toList
-
-let ParseDefault text =
-    ParseToList text Environment.NewLine
-
-let ParseToPair text = 
-    match ParseDefault text with
-    | [] -> (0, [])
-    | replicationCount::realList -> 
-        (Int32.Parse(replicationCount), realList)
-    
-let ReplicateLists text = 
-    let pair = ParseToPair text
-    pair |> snd
-    |> List.collect (fun ch -> List.replicate (fst pair) ch)
-    |> (fun l -> String.Join(Environment.NewLine, l))
-
-stdout.Write(ReplicateLists (stdin.ReadToEnd()))
+open IntroductionLib
 
 [<EntryPoint>]
 let main argv = 
-    let s : string = stdin.ReadToEnd()
+    let rawInput = stdin.ReadToEnd()
+    let inputArgs = GeneralFunctions.ParseParameters rawInput
+    
+    let result = 
+        inputArgs.data
+            |> ListReplication.ReplicateLists inputArgs.operationArg
+            |> GeneralFunctions.MakeListPrintable
+    
+    stdout.Write(result)
 
-    printfn "%s" s
+    Console.ReadKey()
     0 // return an integer exit code
 
 (*

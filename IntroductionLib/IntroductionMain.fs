@@ -24,34 +24,44 @@ module TryOut =
     let genericTest (arg : 'a) = 
         arg
 
-module common =
-    let one = 1
-
-module ListReplication =
+/// TODO: make it beautiful
+module GeneralFunctions =
     open System
-    open Microsoft.FSharp
 
-    let FunSplit (separator:string) (text:string) =
+    type Input = { operationArg: int; data: list<int> }
+
+    let private FunSplit (separator:string) (text:string) =
         text.Split([|separator|], StringSplitOptions.RemoveEmptyEntries) 
 
-    let ParseToList (text:string) (separator:string) =
+    let private ParseParametersToList (separator:string) (text:string) =
         text
         |> FunSplit separator
         |> Array.toList
 
-    let ParseDefault text =
-        ParseToList text Environment.NewLine
+    let private ParseParametersToIntListDefault text =
+        text
+        |> ParseParametersToList Environment.NewLine
+        |> List.map (fun element -> Int32.Parse(element))
 
-    let ParseToPair text = 
-        match ParseDefault text with
-        | [] -> (0, [])
-        | replicationCount::realList -> 
-            (Int32.Parse(replicationCount), realList)
+    let ParseParameters text = 
+        match ParseParametersToIntListDefault text with
+        | [] -> 
+            { operationArg = 0; data = [] }
+        | replicationCount::dataList -> 
+            { operationArg = replicationCount; data = dataList }
+
+    // TODO: is there .ToString()less variant that would be also generic?
+    let MakeListPrintable (data : list<_>) =
+        data
+        |> List.map (fun item -> item.ToString())
+        |> (fun entireList -> String.Join(Environment.NewLine, entireList))
+
+/// probably requires own implementation of List.replicate - perhaps via list comprehension
+/// TODO: get rid of open System
+module ListReplication =
     
-    let ReplicateLists text = 
-        let pair = ParseToPair text
-        pair |> snd
-        |> List.collect (fun ch -> List.replicate (fst pair) ch)
-        |> (fun l -> String.Join(Environment.NewLine, l))
+    let ReplicateLists replications list = 
+        list
+        |> List.collect (fun item -> List.replicate replications item)
 
-    // problem solution: stdout.Write(ReplicateLists (stdin.ReadToEnd()))
+
