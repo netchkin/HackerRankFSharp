@@ -64,4 +64,8 @@ module ListReplication =
         |> List.collect (fun item -> [for _ in 1 .. replications do yield item])
 
 
-
+/// beware, own filter function implementation required here
+module FilterArray =
+     
+     let FilterList exclusiveMaximum list =
+        [for item in list do if item < exclusiveMaximum then yield item]
