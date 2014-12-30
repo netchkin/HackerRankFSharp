@@ -56,12 +56,12 @@ module GeneralFunctions =
         |> List.map (fun item -> item.ToString())
         |> (fun entireList -> String.Join(Environment.NewLine, entireList))
 
-/// probably requires own implementation of List.replicate - perhaps via list comprehension
-/// TODO: get rid of open System
+
 module ListReplication =
     
     let ReplicateLists replications list = 
         list
-        |> List.collect (fun item -> List.replicate replications item)
+        |> List.collect (fun item -> [for _ in 1 .. replications do yield item])
+
 
 
