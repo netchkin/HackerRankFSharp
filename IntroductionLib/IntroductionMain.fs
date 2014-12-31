@@ -1,30 +1,5 @@
 ﻿namespace IntroductionLib
 
-
-type Class1() = 
-    member this.X = "F#"
-
-module TryOut =
-    open System
-
-    let testArgs a b =
-        Console.WriteLine("a: {0}, b: {1}", a, b)
-    
-    let testArgs2 (args : string[]) = 
-        if args.Length = 2 then
-            printfn "1:%s, 2: %s" args.[0] args.[1]
-        else 
-            failwith "you've got it wrong"
-
-    let ReadTest =
-        let input = System.Console.ReadLine()
-        input
-
-    /// identity
-    let genericTest (arg : 'a) = 
-        arg
-
-/// TODO: make it beautiful
 module GeneralFunctions =
     open System
 
@@ -43,7 +18,10 @@ module GeneralFunctions =
         |> ParseParametersToList Environment.NewLine
         |> List.map (fun element -> Int32.Parse(element))
 
-    let ParseParameters text = 
+    let ParseParametersData =
+        ParseParametersToIntListDefault
+
+    let ParseParametersOpData text = 
         match ParseParametersToIntListDefault text with
         | [] -> 
             { operationArg = 0; data = [] }
@@ -64,8 +42,26 @@ module ListReplication =
         |> List.collect (fun item -> [for _ in 1 .. replications do yield item])
 
 
-/// beware, own filter function implementation required here
-module FilterArray =
-     
+module FilterArray =     
      let FilterList exclusiveMaximum list =
         [for item in list do if item < exclusiveMaximum then yield item]
+
+
+module FilterPositionInList =
+    let FilterPosition data = [for index in 1 .. (List.length data) do if index % 2 = 0 then yield data.[index-1]]
+
+    let FilterPositionUsingStructuralInduction data = 
+        let rec fp' list res = 
+            match list with
+                | _::even::rest -> fp' rest (even::res)
+                | _::[] -> res
+                | [] -> res
+        in fp' data []
+
+module ReverseList =
+    let Reverse list =
+        let rec Reverse' list result =
+            match list with
+                | [] -> result
+                | x::xs -> Reverse' xs (x::result)
+        in Reverse' list []

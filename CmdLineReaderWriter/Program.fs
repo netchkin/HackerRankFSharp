@@ -8,14 +8,14 @@ open IntroductionLib
 [<EntryPoint>]
 let main argv = 
     let rawInput = stdin.ReadToEnd()
-    let inputArgs = GeneralFunctions.ParseParameters rawInput
+    let inputArgs = GeneralFunctions.ParseParametersData rawInput
     
     let result = 
-        inputArgs.data
-            |> ListReplication.ReplicateLists inputArgs.operationArg
+        inputArgs
+            |> ReverseList.Reverse
             |> GeneralFunctions.MakeListPrintable
     
-    stdout.Write(result)
+    stdout.Write((result))
 
     Console.ReadKey()
     0 // return an integer exit code
